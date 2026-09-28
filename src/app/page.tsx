@@ -42,6 +42,7 @@ import { diffSweep, appendEvents, type WatchBaseline, type WatchEvent } from '@/
 import { STORAGE_KEY, serializeShapes, deserializeShapes, shapesToGeoJSON, downloadFile } from '@/lib/aoi-export';
 const TokenPanel = dynamic(() => import('@/components/TokenPanel'));
 import SupportMenu from '@/components/SupportMenu';
+import AIAgentPanel from '@/components/AIAgentPanel';
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
@@ -1929,6 +1930,20 @@ export default function Dashboard() {
           </div>
         </motion.div>
       )}
+
+      {/* ── OSIRIS X AI AGENT ── */}
+      <AIAgentPanel
+        cameras={data.cameras ?? []}
+        onLocate={(lat, lng, zoom) => setFlyToLocation({ lat, lng, zoom, ts: Date.now() })}
+        onOpenCamera={(camera) => setActiveCamera({ ...camera, type: 'cctv' })}
+        onEnableCctv={() => setActiveLayers(prev => ({ ...prev, cctv: true }))}
+        onSetLayers={(enable, disable) => setActiveLayers(prev => {
+          const next = { ...prev };
+          for (const key of enable) next[key] = true;
+          for (const key of disable) next[key] = false;
+          return next;
+        })}
+      />
 
       {/* ── Camera Viewer ── */}
       <CameraViewer
