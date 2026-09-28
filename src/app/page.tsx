@@ -1937,6 +1937,12 @@ export default function Dashboard() {
         onLocate={(lat, lng, zoom) => setFlyToLocation({ lat, lng, zoom, ts: Date.now() })}
         onOpenCamera={(camera) => setActiveCamera({ ...camera, type: 'cctv' })}
         onEnableCctv={() => setActiveLayers(prev => ({ ...prev, cctv: true }))}
+        onSetLayers={(enable, disable) => setActiveLayers(prev => {
+          const next = { ...prev };
+          for (const key of enable) next[key] = true;
+          for (const key of disable) next[key] = false;
+          return next;
+        })}
       />
 
       {/* ── Camera Viewer ── */}
